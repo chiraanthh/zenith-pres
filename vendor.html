@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard - Order Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendor_styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Vendor Dashboard</h2>
+        <ul>
+            <li><a href="#orders">View Orders</a></li>
+            <li><a href="#order-details">Order Details</a></li>
+            <li><a href="#order-status">Order Status</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- View Orders Section -->
+        <section id="orders" class="section">
+            <h2>View Orders</h2>
+            <input type="text" id="search" placeholder="Search by Hospital Name" class="search-bar">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Hospital</th>
+                        <th>Drug Name</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#ORD12345</td>
+                        <td>Saint Mary's Hospital</td>
+                        <td>Paracetamol</td>
+                        <td>100</td>
+                        <td><span class="status pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>#ORD12346</td>
+                        <td>Grace Medical Center</td>
+                        <td>Aspirin</td>
+                        <td>50</td>
+                        <td><span class="status processing">Processing</span></td>
+                    </tr>
+                    <tr>
+                        <td>#ORD12347</td>
+                        <td>Bright Future Clinic</td>
+                        <td>Amoxicillin</td>
+                        <td>200</td>
+                        <td><span class="status shipped">Shipped</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Order Details Section -->
+        <section id="order-details" class="section">
+            <h2>Order Details</h2>
+            <div class="order-detail">
+                <h3>Order ID: #ORD12345</h3>
+                <p><strong>Hospital Name:</strong> Saint Mary's Hospital</p>
+                <p><strong>Drug Name:</strong> Paracetamol</p>
+                <p><strong>Quantity:</strong> 100</p>
+                <p><strong>Order Date:</strong> 2025-04-10</p>
+                <p><strong>Status:</strong> <span class="status pending">Pending</span></p>
+                <p><strong>Shipping Address:</strong> New York, USA</p>
+                <button class="btn">Update Status</button>
+            </div>
+        </section>
+
+        <!-- Order Status Section -->
+        <section id="order-status" class="section">
+            <h2>Track Order Status</h2>
+            <form class="status-form">
+                <label for="order-id">Enter Order ID:</label>
+                <input type="text" id="order-id" placeholder="Order ID" required>
+                <button type="submit">Track Order</button>
+            </form>
+            <div id="order-status-display" class="status-display">
+                <!-- Display order status after tracking -->
+            </div>
+        </section>
+    </div>
+</body>
+</html>

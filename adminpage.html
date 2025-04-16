@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Drug Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+            <li><a href="#order-tracking">Order Tracking</a></li>
+            <li><a href="#inventory">Inventory</a></li>
+            <li><a href="#hospital-details">Hospital Details</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Dashboard Stats -->
+        <div class="dashboard-stats">
+            <div class="card">
+                <h3>Pending Orders</h3>
+                <p>12</p>
+            </div>
+            <div class="card">
+                <h3>Upcoming Orders</h3>
+                <p>8</p>
+            </div>
+            <div class="card">
+                <h3>Drugs in Stock</h3>
+                <p>150</p>
+            </div>
+        </div>
+
+        <!-- Order Tracking Section -->
+        <section id="order-tracking" class="section">
+            <h2>Order Tracking</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#ORD12345</td>
+                        <td><span class="status pending">Pending</span></td>
+                        <td>2025-04-15</td>
+                        <td>John Doe</td>
+                    </tr>
+                    <tr>
+                        <td>#ORD12346</td>
+                        <td><span class="status upcoming">Upcoming</span></td>
+                        <td>2025-04-16</td>
+                        <td>Jane Smith</td>
+                    </tr>
+                    <tr>
+                        <td>#ORD12347</td>
+                        <td><span class="status processing">Processing</span></td>
+                        <td>2025-04-14</td>
+                        <td>Robert Brown</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Inventory Section -->
+        <section id="inventory" class="section">
+            <h2>Inventory</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Drug Name</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Paracetamol</td>
+                        <td>100</td>
+                        <td><span class="status in-stock">In Stock</span></td>
+                    </tr>
+                    <tr>
+                        <td>Aspirin</td>
+                        <td>50</td>
+                        <td><span class="status out-of-stock">Out of Stock</span></td>
+                    </tr>
+                    <tr>
+                        <td>Amoxicillin</td>
+                        <td>200</td>
+                        <td><span class="status in-stock">In Stock</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Hospital Details Section -->
+        <section id="hospital-details" class="section">
+            <h2>Hospital Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hospital Name</th>
+                        <th>Location</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Saint Mary's Hospital</td>
+                        <td>New York, USA</td>
+                        <td>+1 555-1234</td>
+                    </tr>
+                    <tr>
+                        <td>Grace Medical Center</td>
+                        <td>Los Angeles, USA</td>
+                        <td>+1 555-5678</td>
+                    </tr>
+                    <tr>
+                        <td>Bright Future Clinic</td>
+                        <td>Chicago, USA</td>
+                        <td>+1 555-8765</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
