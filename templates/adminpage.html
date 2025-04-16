@@ -6,6 +6,7 @@
     <title>Admin Dashboard - Drug Inventory System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
+    
 </head>
 <body>
     <div class="sidebar">
@@ -13,11 +14,29 @@
         <ul>
             <li><a href="#admin-orders">Orders</a></li>
             <li><a href="#admin-inventory">Inventory</a></li>
-            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+            <li><form action="{{ url_for('logout') }}" method="POST" id="logout-form">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form></li>
         </ul>
     </div>
 
     <div class="main-content">
+        <section id="admin-alerts">
+            <h2>Status Change Alerts</h2>
+            <ul>
+                {% for update in updates %}
+                <li>
+                    <strong>{{ update.changed_by }}</strong> changed
+                    <strong>Order {{ update.order_id }}</strong> from
+                    <em>{{ update.old_status }}</em> to
+                    <em>{{ update.new_status }}</em> at {{ update.timestamp }}
+                </li>
+                {% else %}
+                <li>No recent status updates.</li>
+                {% endfor %}
+            </ul>
+        </section>
+
         <section id="admin-orders">
             <h2>Orders</h2>
             <table>
@@ -39,13 +58,13 @@
                         <td>{{ order.date }}</td>
                         <td>
                             {% if order.status in ['Pending', 'Upcoming'] %}
-                                <form action="{{ url_for('cancel_order', order_id=order.order_id) }}" method="POST" style="display:inline;">
-                                    <button type="submit" onclick="return confirm('Are you sure you want to cancel this order?');">
-                                        Cancel
-                                    </button>
-                                </form>
+                            <form action="{{ url_for('cancel_order', order_id=order.order_id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to cancel this order?');">
+                                    Cancel
+                                </button>
+                            </form>
                             {% else %}
-                                <span>Not Cancelable</spxan>
+                            <span>Not Cancelable</span>
                             {% endif %}
                         </td>
                     </tr>

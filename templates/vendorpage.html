@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Dashboard</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
@@ -11,15 +12,27 @@
         <ul>
             <li><a href="#vendor-orders">Orders</a></li>
             <li><a href="#vendor-inventory">Inventory</a></li>
-            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+            
+            <form action="{{ url_for('logout') }}" method="POST" id="logout-form">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </ul>
     </div>
 
     <div class="main-content">
+        <!-- Orders Section -->
         <section id="vendor-orders">
             <h2>Orders</h2>
             <table>
-                <thead><tr><th>Order ID</th><th>Customer</th><th>Status</th><th>Date</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Update Status</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for order in orders %}
                     <tr>
@@ -27,16 +40,34 @@
                         <td>{{ order.customer }}</td>
                         <td>{{ order.status }}</td>
                         <td>{{ order.date }}</td>
+                        <td>
+                            <form onsubmit="return false;">
+                                <select name="status" class="dropdown" onchange="handleStatusChange(this, {{ order.order_id }})" {% if order.status_change_count >= 3 %}disabled{% endif %}>
+                                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Upcoming" {% if order.status == 'Upcoming' %}selected{% endif %}>Upcoming</option>
+                                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                </select>
+                            </form>
+                            
+                        
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
 
+        <!-- Inventory Section -->
         <section id="vendor-inventory">
             <h2>Inventory</h2>
             <table>
-                <thead><tr><th>Drug</th><th>Quantity</th><th>Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for item in inventory %}
                     <tr>
@@ -49,5 +80,63 @@
             </table>
         </section>
     </div>
+    <script>
+        function handleStatusChange(selectElement, orderId) {
+            const newStatus = selectElement.value;
+    
+            if (newStatus === "Delivered") {
+                const otp = prompt("Enter OTP to confirm delivery:");
+                if (!otp) return; // Cancelled or empty input
+    
+                fetch(`/update_status/${orderId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        status: newStatus,
+                        otp: otp
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Status updated successfully!");
+                        window.location.reload();
+                    } else {
+                        alert("Invalid OTP or update failed.");
+                        window.location.reload();  // Reset select
+                        
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Something went wrong!");
+                    window.location.reload();  // auto refresh
+                });
+            } else {
+                // For other statuses like 'Pending', 'Upcoming'
+                fetch(`/update_status/${orderId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Status updated.");
+                        window.location.reload();
+                    } else {
+                        alert("Update failed.");
+                    }
+                });
+            }
+        }
+    </script>
+    
 </body>
 </html>

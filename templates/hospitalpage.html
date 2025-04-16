@@ -3,202 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Page - Drug Inventory & Payment</title>
-    <link rel="stylesheet" href="static/hospital_styles.css">
-    <style>
-        /* Flash message styling */
-        .flash-message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .flash-message.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .flash-message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-    </style>
+    <title>Hospital Dashboard - Drug Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/hospital_styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Hospital Drug Inventory & Payment</h1>
-            <nav>
-                <ul>
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#orders-section">Orders</a></li>
-                    <li><a href="#inventory-section">Inventory</a></li>
-                    <li><a href="#">Profile</a></li>
-                </ul>
-            </nav>
-        </header>
 
-        <main>
-            <!-- Flash Messages -->
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="flash-messages">
-                        {% for message in messages %}
-                            <div class="flash-message {{ 'success' if 'success' in message else 'error' }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-
-            <!-- Inventory and Order Tracking Section -->
-            <section class="inventory" id="inventory-section">
-                <h2>Order & Inventory Management</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Drug Name</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in inventory %}
-                        <tr>
-                            <td>{{ item.drug_name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ item.status }}</td>
-                            <td>
-                                {% if item.status == 'In Stock' %}
-                                <button class="order-btn" 
-        data-drug="{{ item.drug_name }}" 
-        data-id="{{ item.id }}" 
-        data-quantity="{{ item.quantity }}"
-        onclick="placeOrder(this)">Order</button>
-
-                                {% else %}
-                                <button disabled>Out of Stock</button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- Order Section -->
-            <section id="orders-section">
-                <h2>My Orders</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Drug Name</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                        <tr>
-                            <td>{{ order.order_id }}</td>
-                            <td>{{ order.drug_name }}</td>
-                            <td>{{ order.quantity }}</td>
-                            <td>{{ order.status }}</td>
-                            <td>{{ order.date }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </section>
-        </main>
-
-        <footer>
-            <p>&copy; 2025 Hospital Drug Inventory System</p>
-        </footer>
+    <div class="sidebar">
+        <h2>Hospital</h2>
+        <ul>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#orders-section">My Orders</a></li>
+            <li><a href="#inventory-section">Inventory</a></li>
+            <!-- Logout Form -->
+            <li>
+                <form action="{{ url_for('logout') }}" method="POST" id="logout-form">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </li>
+        </ul>
     </div>
 
+    <div class="main-content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message {{ 'success' if 'success' in message else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
+        <!-- Orders Section -->
+        <section id="orders-section" style="margin-top: 40px;">
+            <h2>My Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>OTP</th>  <!-- New Column for OTP -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.drug_name }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>
+                            {% if order.status == 'Pending' %}
+                                {{ order.otp }}  <!-- Display OTP for Pending Orders -->
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Inventory Section -->
+        <section id="inventory-section">
+            <h2>Inventory</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory %}
+                    <tr>
+                        <td>{{ item.drug_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>
+                            {% if item.status == 'In Stock' %}
+                                <button class="order-btn" 
+                                    data-drug="{{ item.drug_name }}" 
+                                    data-id="{{ item.id }}" 
+                                    data-quantity="{{ item.quantity }}"
+                                    onclick="placeOrder(this)">Order</button>
+                            {% else %}
+                                <button disabled>Out of Stock</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
 
-    <!-- Insert your JS here -->
+    </div>
+
     <script>
-document.querySelectorAll('.order-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const drugName = this.getAttribute('data-drug');
-        const drugId = this.getAttribute('data-id');
-        const availableQuantity = parseInt(this.getAttribute('data-quantity'));
-        const orderId = Date.now();  // Use the current timestamp as the unique order ID
+        function placeOrder(button) {
+            const drugName = button.getAttribute("data-drug");
+            const drugId = button.getAttribute("data-id");
+            const availableQuantity = parseInt(button.getAttribute("data-quantity"), 10);
+            const orderId = Date.now();
+            const orderQuantity = parseInt(prompt("Enter quantity to order:"), 10);
 
-        const orderQuantity = parseInt(prompt("Enter the quantity to order:"), 10);
-
-        // Check if the quantity is valid and within stock limits
-        if (isNaN(orderQuantity) || orderQuantity <= 0 || orderQuantity > availableQuantity) {
-            alert("Invalid quantity. Please enter a positive number less than or equal to the available stock.");
-            return;  // Exit the function if the input is invalid
-        }
-
-        // Submit the order request to the backend
-        fetch("/place_order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                order_id: orderId,  // Include the order_id
-                drug_id: drugId,
-                drug_name: drugName,
-                quantity: orderQuantity,
-                customer: "Hospital"  // Replace with the logged-in user's information (e.g., session data)
-            })
-        })
-        .then(response => response.json())  // Parse the response as JSON
-        .then(data => {
-            console.log("Response Data:", data);  // Log the data for inspection
-            
-            if (data.msg === "Order placed and inventory updated successfully") {
-                alert("Order placed successfully.");
-                //just reload the page 
-                window.location.reload();
-                // Optional: Additional logic for dynamically updating the orders list in the UI
-                fetch("/get_orders")
-                    .then(response => response.json())
-                    .then(orders => {
-                        const ordersSection = document.getElementById("orders-section");
-                        let ordersHtml = '';
-
-                        // Loop through the orders and update the UI
-                        orders.forEach(order => {
-                            ordersHtml += `
-                                <tr>
-                                    <td>${order.order_id}</td>
-                                    <td>${order.drug_name}</td>
-                                    <td>${order.quantity}</td>
-                                    <td>${order.status}</td>
-                                    <td>${order.date}</td>
-                                </tr>
-                            `;
-                        });
-
-                        // Insert the updated order list into the orders section
-                        ordersSection.querySelector("tbody").innerHTML = ordersHtml;
-                    })
-                    .catch(err => {
-                        console.error("Error fetching updated orders:", err);
-                    });
-            } else {
-                alert("Error: " + data.error);  // Show the error message returned by the server
+            if (isNaN(orderQuantity) || orderQuantity <= 0 || orderQuantity > availableQuantity) {
+                alert("Invalid quantity.");
+                return;
             }
-        })
-        .catch(error => {
-            console.error("Error placing order:", error);
-            alert("There was an error placing the order. Please try again.");
-        });
-    });
-});
 
-
+            fetch("/place_order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    drug_id: drugId,
+                    drug_name: drugName,
+                    quantity: orderQuantity,
+                    customer: "Hospital"
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.msg === "Order placed and inventory updated successfully") {
+                    alert("Order placed successfully!");
+                    window.location.reload();  // auto refresh
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Something went wrong!");
+            });
+        }
     </script>
+
 </body>
 </html>
