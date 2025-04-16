@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Drug Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+            <li><a href="#admin-orders">Orders</a></li>
+            <li><a href="#admin-inventory">Inventory</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <section id="admin-orders">
+            <h2>Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.customer }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>
+                            {% if order.status in ['Pending', 'Upcoming'] %}
+                                <form action="{{ url_for('cancel_order', order_id=order.order_id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to cancel this order?');">
+                                        Cancel
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span>Not Cancelable</spxan>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="admin-inventory">
+            <h2>Inventory</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory %}
+                    <tr>
+                        <td>{{ item.drug_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
