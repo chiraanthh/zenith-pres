@@ -14,6 +14,7 @@
         <ul>
             <li><a href="#admin-orders">Orders</a></li>
             <li><a href="#admin-inventory">Inventory</a></li>
+            <li><a href="#admin-hospitals">Hospitals</a></li>
             <li><form action="{{ url_for('logout') }}" method="POST" id="logout-form">
                 <button type="submit" class="logout-btn">Logout</button>
             </form></li>
@@ -21,22 +22,7 @@
     </div>
 
     <div class="main-content">
-        <section id="admin-alerts">
-            <h2>Status Change Alerts</h2>
-            <ul>
-                {% for update in updates %}
-                <li>
-                    <strong>{{ update.changed_by }}</strong> changed
-                    <strong>Order {{ update.order_id }}</strong> from
-                    <em>{{ update.old_status }}</em> to
-                    <em>{{ update.new_status }}</em> at {{ update.timestamp }}
-                </li>
-                {% else %}
-                <li>No recent status updates.</li>
-                {% endfor %}
-            </ul>
-        </section>
-
+       
         <section id="admin-orders">
             <h2>Orders</h2>
             <table>
@@ -81,19 +67,68 @@
                         <th>Drug</th>
                         <th>Quantity</th>
                         <th>Status</th>
+                        <th>Add Stock</th> <!-- New Column -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in inventory %}
-                    <tr>
+                    <tr>    
                         <td>{{ item.drug_name }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.status }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('add_stock') }}">
+                                <input type="hidden" name="drug_name" value="{{ item.drug_name }}">
+                                <input type="number" name="quantity" min="1" required style="width: 150px; height: 40px;margin-left:100px; display:inline;">
+                                <button type="submit" class="btn">Add</button>
+                            </form>
+                            
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
+        <!-- Hospital Management Section -->
+<section id="admin-hospitals">
+    <h2>Hospitals</h2>
+
+    <!-- Add Hospital Form -->
+    <form action="{{ url_for('add_hospital') }}" method="POST" class="form-style">
+        <input type="text" name="id" required placeholder="Hospital ID"  style = "height:60px">
+        <input type="text" name="name" required placeholder="Hospital Name" style = "height:60px">
+        <input type="text" name="location" required placeholder="Location" style = "height:60px">
+        <button type="submit" class="add">Add Hospital</button>
+    </form>
+
+    <!-- Hospital List -->
+    <table>
+        <thead>
+            <tr>
+                <th>Hospital ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hospital in hospitals %}
+            <tr>
+                <td>{{ hospital.id }}</td>
+                <td>{{ hospital.name }}</td>
+                <td>{{ hospital.location }}</td>
+                <td>
+                    <form action="{{ url_for('delete_hospital', hospital_id=hospital.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class = "btn" onclick="return confirm('Are you sure you want to delete this hospital?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+        
     </div>
 </body>
 </html>

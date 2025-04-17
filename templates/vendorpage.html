@@ -12,10 +12,12 @@
         <ul>
             <li><a href="#vendor-orders">Orders</a></li>
             <li><a href="#vendor-inventory">Inventory</a></li>
-            
-            <form action="{{ url_for('logout') }}" method="POST" id="logout-form">
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
+            <li>
+                <!-- Logout Form -->
+                <form action="{{ url_for('logout') }}" method="POST" id="logout-form">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </li>
         </ul>
     </div>
 
@@ -41,15 +43,16 @@
                         <td>{{ order.status }}</td>
                         <td>{{ order.date }}</td>
                         <td>
-                            <form onsubmit="return false;">
-                                <select name="status" class="dropdown" onchange="handleStatusChange(this, {{ order.order_id }})" {% if order.status_change_count >= 3 %}disabled{% endif %}>
-                                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
-                                    <option value="Upcoming" {% if order.status == 'Upcoming' %}selected{% endif %}>Upcoming</option>
-                                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
-                                </select>
-                            </form>
-                            
-                        
+                            <select 
+                                name="status" 
+                                class="dropdown" 
+                                onchange="handleStatusChange(this, {{ order.order_id }})"
+                                {% if order.status_change_count >= 3 %}disabled{% endif %}
+                            >
+                                <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Upcoming" {% if order.status == 'Upcoming' %}selected{% endif %}>Upcoming</option>
+                                <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                            </select>
                         </td>
                     </tr>
                     {% endfor %}
@@ -82,19 +85,23 @@
     </div>
     <script>
         function handleStatusChange(selectElement, orderId) {
-            const newStatus = selectElement.value;
+            const selectedStatus = selectElement.value;
     
-            if (newStatus === "Delivered") {
-                const otp = prompt("Enter OTP to confirm delivery:");
-                if (!otp) return; // Cancelled or empty input
+            if (selectedStatus === 'Delivered') {
+                const otp = prompt("Enter OTP to mark this order as Delivered:");
+                if (!otp) {
+                    alert("OTP is required.");
+                    selectElement.value = "";  // Reset value if cancelled
+                    return;
+                }
     
-                fetch(`/update_status/${orderId}`, {
-                    method: "POST",
+                fetch(`/update_order_status/${orderId}`, {
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        status: newStatus,
+                        status: selectedStatus,
                         otp: otp
                     })
                 })
@@ -102,38 +109,38 @@
                 .then(data => {
                     if (data.success) {
                         alert("Status updated successfully!");
-                        window.location.reload();
+                        window.location.reload();  // auto refresh
                     } else {
-                        alert("Invalid OTP or update failed.");
-                        window.location.reload();  // Reset select
-                        
+                        alert(data.message || "Invalid OTP.");
+                        window.location.reload();  // auto refresh
                     }
                 })
-                .catch(err => {
-                    console.error(err);
-                    alert("Something went wrong!");
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Something went wrong.");
                     window.location.reload();  // auto refresh
                 });
             } else {
-                // For other statuses like 'Pending', 'Upcoming'
-                fetch(`/update_status/${orderId}`, {
-                    method: "POST",
+                // Pending or Upcoming
+                fetch(`/update_order_status/${orderId}`, {
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        status: newStatus
+                        status: selectedStatus
                     })
                 })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
                         alert("Status updated.");
-                        window.location.reload();
+                        location.reload();
                     } else {
-                        alert("Update failed.");
+                        alert(data.message || "Failed to update.");
                     }
-                });
+                })
+                .catch(error => console.error("Error:", error));
             }
         }
     </script>

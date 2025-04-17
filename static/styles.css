@@ -228,6 +228,19 @@ cursor: pointer;
 width: 100%; /* Make it span the full width of the sidebar */
 transition: background-color 0.3s ease;
 }
+.add {
+    background-color: #e74c3c; /* Red color for logout */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 10%; /* Make it span the full width of the sidebar */
+    transition: background-color 0.3s ease;
+    }
 select {
     background-color: #4d4d4b; /* Red color for logout */
     color: rgb(254, 252, 252);
@@ -241,7 +254,28 @@ select {
     width: 75%; /* Make it span the full width of the sidebar */
     transition: background-color 0.3s ease;
     }
+.btn{
 
+ background-color: #e74c3c; /* Red color for logout */
+ float:right;
+ margin-right:200px;
+color: white;
+border: none;
+padding: 12px 20px;
+text-align: center;
+font-size: 16px;
+font-weight: 600;
+border-radius: 8px;
+cursor: pointer;
+width: 25%; /* Make it span the full width of the sidebar */
+transition: background-color 0.3s ease;
+}
+.btn:hover {
+        background-color: #c0aa2b; /* Darker red on hover */
+        }
+.btn:focus {
+        outline: none;
+}
 .logout-btn:hover {
 background-color: #c0aa2b; /* Darker red on hover */
 }
