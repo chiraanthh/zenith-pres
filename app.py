@@ -10,9 +10,9 @@ app.secret_key = 'your_secret_key_here'
 
 # ---------------- DB CONFIG ----------------
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'Ch!raan1h',
+    'host': 'mysql-db1-zenith-1503.j.aivencloud.com',
+    'user': 'avnadmin',
+    'password': 'AVNS_jfh0BOV8hX7cZMI7AI2',
     'database': 'drug'
 }
 
