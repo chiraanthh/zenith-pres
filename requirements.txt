@@ -3,3 +3,4 @@ Flask-Cors>=5.0.1
 mysql-connector-python==8.0.27
 flask-sqlalchemy==2.5.1
 gunicorn==20.1.0
+werkzeug==2.0.3
