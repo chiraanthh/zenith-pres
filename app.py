@@ -3,7 +3,7 @@ import mysql.connector
 from flask_cors import CORS
 import random
 import string
-
+import os
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'your_secret_key_here'
@@ -12,7 +12,7 @@ app.secret_key = 'your_secret_key_here'
 db_config = {
     'host': 'mysql-db1-zenith-1503.j.aivencloud.com',
     'user': 'avnadmin',
-    'password': 'AVNS_jfh0BOV8hX7cZMI7AI2',
+    'password': os.environ.get('MYSQL_PASSWORD'),
     'database': 'drug'
 }
 
